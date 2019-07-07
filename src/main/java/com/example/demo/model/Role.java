@@ -21,6 +21,13 @@ import org.hibernate.annotations.NaturalId;
 @Table(name = "role")
 public class Role {
 
+	public Role() {
+	}
+
+	public Role(RoleName rolename) {
+		this.rolename = rolename;
+	}
+
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue
@@ -47,4 +54,9 @@ public class Role {
 		this.rolename = rolename;
 	}
 
+	@Override
+	public String toString() {
+		return rolename.name().toString();
+	}
+	
 }

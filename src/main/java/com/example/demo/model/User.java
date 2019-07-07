@@ -5,6 +5,7 @@ package com.example.demo.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,6 +34,20 @@ public class User {
 		this.username = username;
 	}
 
+	public User(String username, boolean enabled, boolean tokenExpired) {
+		this.username = username;
+		this.enabled = enabled;
+		this.tokenExpired = tokenExpired;
+	}
+	
+	public User(String username, String password, boolean enabled, boolean tokenExpired, Set<Role> roles) {
+		this.username = username;
+		this.password = password;
+		this.enabled = enabled;
+		this.tokenExpired = tokenExpired;
+		this.roles = roles;
+	}
+	
 	public User(User user) {
 		this.id = user.getId();
 		this.username = user.getUsername();
@@ -63,9 +78,11 @@ public class User {
 	@Column(name = "tokenExpired", nullable = false)
 	private boolean tokenExpired;
 
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "name")
-	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	@JoinTable(name = "user_roles", 
+	joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
+	inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<Role> roles;
 
 	public String getUsername() {

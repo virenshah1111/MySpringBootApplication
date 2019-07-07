@@ -16,19 +16,16 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class UserDetailsImpl extends User implements UserDetails {
 
-	
 	private static final long serialVersionUID = 1L;
 
 	public UserDetailsImpl(User user) {
-        super(user);
-    }
-	
+		super(user);
+	}
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		 return getRoles()
-	                .stream()
-	                .map(role-> new SimpleGrantedAuthority("ROLE_"+role.getRolename()))
-	                .collect(Collectors.toList());
+		return getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRolename()))
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -38,12 +35,17 @@ public class UserDetailsImpl extends User implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return this.isEnabled();
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return !super.isTokenExpired();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return super.isEnabled();
 	}
 
 }

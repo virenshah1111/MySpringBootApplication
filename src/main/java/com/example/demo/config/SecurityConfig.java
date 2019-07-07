@@ -30,10 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests()
 				.antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
-						"/**/*.css", "/**/*.js").permitAll()
-				.antMatchers("/roles").permitAll()
-				.antMatchers("/users").permitAll().anyRequest().authenticated().and().formLogin()
-				.permitAll().and().logout().logoutSuccessUrl("/login").permitAll();
+						"/**/*.css", "/**/*.js")
+				.permitAll()
+				// .antMatchers("/roles").permitAll()
+//				.antMatchers("/users").permitAll()
+				.anyRequest().authenticated().and().formLogin().permitAll().and()
+				.logout().logoutSuccessUrl("/login").permitAll();
 	}
 
 	@Override
@@ -45,26 +47,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 * @Bean public PasswordEncoder passwordEncoder() { return
 	 * PasswordEncoderFactories.createDelegatingPasswordEncoder().sec; }
 	 */
-	
-	
+
 	@Bean
 	public PasswordEncoder customPasswordEncoder() {
-	    return new PasswordEncoder() {
-	        @Override
-	        public String encode(CharSequence rawPassword) {
-	            return BCrypt.hashpw(rawPassword.toString(), BCrypt.gensalt(4));
-	        }
-	        @Override
-	        public boolean matches(CharSequence rawPassword, String encodedPassword) {
-	            return BCrypt.checkpw(rawPassword.toString(), encodedPassword);
-	        }
-	    };
+		return new PasswordEncoder() {
+			@Override
+			public String encode(CharSequence rawPassword) {
+				return BCrypt.hashpw(rawPassword.toString(), BCrypt.gensalt(4));
+			}
+
+			@Override
+			public boolean matches(CharSequence rawPassword, String encodedPassword) {
+				return BCrypt.checkpw(rawPassword.toString(), encodedPassword);
+			}
+		};
 	}
-	
-//	@Override
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//		auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles(RoleName.ADMIN.name()).and()
-//				.withUser("user").password("{noop}password").roles(RoleName.USER.name());
-//	}
+
+	// @Override
+	// protected void configure(AuthenticationManagerBuilder auth) throws Exception
+	// {
+	// auth.inMemoryAuthentication().withUser("admin").password("{noop}password").roles(RoleName.ADMIN.name()).and()
+	// .withUser("user").password("{noop}password").roles(RoleName.USER.name());
+	// }
 
 }
