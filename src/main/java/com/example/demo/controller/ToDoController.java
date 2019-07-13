@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.common.ResponseUtil;
+import com.example.demo.model.RoleName;
 import com.example.demo.model.ToDo;
 import com.example.demo.model.UserDetailsImpl;
 import com.example.demo.service.ToDoService;
@@ -28,7 +30,7 @@ import com.example.demo.service.ToDoService;
 /**
  * @author virens
  *
- */
+ */	
 @RestController
 @RequestMapping(path = "/todos")
 public class ToDoController {
@@ -60,6 +62,7 @@ public class ToDoController {
 		return new ResponseEntity<>(responseUtil, HttpStatus.OK);
 	}
 
+	@Secured({RoleName.RoleType.ADMIN})
 	@DeleteMapping(path = "/{ids}")
 	public ResponseEntity<ResponseUtil<ToDo>> delete(@PathVariable("ids") List<Long> ids) {
 		toDoService.delete(ids);
