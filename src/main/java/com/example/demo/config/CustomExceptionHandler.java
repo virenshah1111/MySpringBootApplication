@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.example.demo.common.ResponseUtil;
 import com.example.demo.common.ValidationErrorMessage;
+import com.example.demo.exception.ValidationException;
 
 /**
  * @author virens
@@ -53,6 +54,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		});
 
 		return new ResponseEntity<>(new ResponseUtil<>(errorList, errorMessage), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ValidationException.class)
+	public final ResponseEntity<Object> handleUserNotFoundException(ValidationException ex, WebRequest request) {
+		ResponseUtil<List<ValidationErrorMessage>> responseUtil = new ResponseUtil<>();
+		responseUtil.setData(ex.getViolations());
+		responseUtil.setMessage("Validation Failed.");
+		return new ResponseEntity<>(responseUtil, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler({ AccessDeniedException.class })

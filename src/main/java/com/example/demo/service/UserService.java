@@ -13,8 +13,12 @@ import com.example.demo.model.User;
  */
 public interface UserService {
 
+	void save(User user);
+
 	void saveAll(List<User> userList);
 
 	List<User> findAll();
+
+	boolean existsByUsername(String username);
 
 }

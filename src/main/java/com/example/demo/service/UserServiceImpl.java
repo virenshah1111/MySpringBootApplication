@@ -22,8 +22,8 @@ public class UserServiceImpl implements UserService {
 	UserRepository userRepository;
 
 	@Override
-	public List<User> findAll() {
-		return (List<User>) userRepository.findAll();
+	public void save(User user) {
+		userRepository.save(user);
 	}
 
 	@Override
@@ -31,6 +31,14 @@ public class UserServiceImpl implements UserService {
 		userRepository.saveAll(userList);
 	}
 
-	
+	@Override
+	public boolean existsByUsername(String username) {
+		return userRepository.findByUsername(username).isPresent();
+	}
+
+	@Override
+	public List<User> findAll() {
+		return (List<User>) userRepository.findAll();
+	}
 
 }
